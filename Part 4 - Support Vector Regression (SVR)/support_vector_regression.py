@@ -3,6 +3,7 @@
 # ---------- Importing libraries
 import numpy
 import pandas
+import matplotlib.pyplot as mPlot
 
 # ---------- Importing the dataset
 dataset = pandas.read_csv('Position_Salaries.csv')
@@ -23,5 +24,25 @@ regressor = SVR(kernel='rbf') # https://data-flair.training/blogs/svm-kernel-fun
 regressor.fit(X, y);
 
 # ---------- Predicting a new result
+scaledPredictedSalary = regressor.predict(xScaler.transform([[6.5]]))
+predictedSalary = yScaler.inverse_transform(scaledPredictedSalary)
+
 # ---------- Visualising the SVR results
+xITransformed = xScaler.inverse_transform(X)
+yITransformed = yScaler.inverse_transform(y) 
+mPlot.scatter(xITransformed, yITransformed, color='red')
+mPlot.plot(xITransformed, yScaler.inverse_transform(regressor.predict(X)), color='blue')
+mPlot.title('Truth or Bluff (Support Vector Regression)')
+mPlot.xlabel('Position level')
+mPlot.ylabel('Salary')
+mPlot.show()
+
 # ---------- Visualising the SVR results (for higher resolution and smoother curve)
+xGrid = numpy.arrange(min(xITransformed), min(xITransformed), 0.1)
+xGrid = xGrid.reshape(len(xGrid), 1)
+mPlot.scatter(xITransformed, yITransformed, color='red')
+mPlot.plot(xGrid, yScaler.inverse_transform(regressor.predict(xScaler.transform(xGrid))), color='blue')
+mPlot.title('Truth or Bluff (Support Vector Regression)')
+mPlot.xlabel('Position level')
+mPlot.ylabel('Salary')
+mPlot.show()
